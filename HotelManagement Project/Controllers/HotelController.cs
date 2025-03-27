@@ -71,7 +71,7 @@ namespace HotelManagement_Project.Controllers
       
         
         [HttpDelete("{hotelId}")]
-       [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteHotel(int hotelId)
         {
             try
@@ -88,16 +88,30 @@ namespace HotelManagement_Project.Controllers
 
         
         [HttpGet]
-        [Authorize(Roles = "Admin,Manager,Guest")]
+        
         public async Task<ActionResult<IEnumerable<HotelForGettingDto>>> GetAllHotels([FromQuery] string country, [FromQuery] string city, [FromQuery] int? rating)
         {
             var hotels = await _hotelService.GetAllHotelsAsync(country, city, rating);
             return Ok(hotels);
         }
 
-        
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetFilteredHotels([FromQuery] string? country, [FromQuery] string? city, [FromQuery] int? rating)
+        {
+            var hotels = await _hotelService.GetFilteredHotelsAsync(country, city, rating);
+
+            if (hotels == null || !hotels.Any())
+            {
+                return NotFound("No hotels found with the given filters.");
+            }
+
+            return Ok(hotels);
+        }
+
+
+
         [HttpGet("{hotelId}")]
-        [Authorize(Roles = "Admin,Manager,Guest")]
+       
         public async Task<ActionResult<HotelForGettingDto>> GetHotel(int hotelId)
         {
             try
@@ -138,8 +152,6 @@ namespace HotelManagement_Project.Controllers
 
         }
 
-
-
         //  ------------
 
         [HttpPost("Manager")]
@@ -167,8 +179,6 @@ namespace HotelManagement_Project.Controllers
             }
         }
 
-
-
         [HttpPut("Manager")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateManager([FromBody] ManagerForUpdateDto managerDto)
@@ -186,7 +196,7 @@ namespace HotelManagement_Project.Controllers
         }
 
         [HttpDelete("Manager/{managerId}")]
-      [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteManager(int managerId)
         {
             try
@@ -202,7 +212,7 @@ namespace HotelManagement_Project.Controllers
         }
 
         [HttpGet("manager")]
-       [Authorize(Roles = "Admin,Manager,Guest")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> GetAllManagers()
         {
             try
@@ -222,7 +232,7 @@ namespace HotelManagement_Project.Controllers
         //  ------------
 
         [HttpPost("room")]
-       [Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> AddRoom([FromBody] RoomForCreateDto roomDto)
         {
             if (roomDto == null)
@@ -246,7 +256,7 @@ namespace HotelManagement_Project.Controllers
         }
 
         [HttpGet("room/{roomId}")]
-       [Authorize(Roles = "Admin,Manager,Guest")]
+      
         public async Task<IActionResult> GetRoomById(int roomId)
         {
             try
@@ -318,7 +328,7 @@ namespace HotelManagement_Project.Controllers
 
 
         [HttpPost("guest")]
-        [Authorize(Roles = "Admin,Manager,Guest")]
+      
         public async Task<IActionResult> AddGuest([FromBody] GuestForCreateDto guestDto)
         {
             try
@@ -366,6 +376,7 @@ namespace HotelManagement_Project.Controllers
         }
 
         [HttpGet("guest/{guestId}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> GetGuestAsync(int guestId)
         {
             try
@@ -533,26 +544,6 @@ namespace HotelManagement_Project.Controllers
 
 
 
-
-        //public async Task<IActionResult> GetReservations([FromQuery] ReservationFilterDto filter)
-        //{
-        //    var reservations = await _reservationService.GetReservationsAsync(filter);
-        //    return Ok(reservations);
-        //}
-
-
-
-        //GustReservation
-        //[HttpPost("guestReservation")]
-        //public async Task<IActionResult> AddGuestToReservation([FromBody] GuestReservationForGettingDto guestReservationDto)
-        //{
-        //    await _guestReservationService.AddGuestToReservationAsync(guestReservationDto);
-        //    await _guestReservationService.SaveGuestReservation();
-        //    return Ok();
-        //}
-
-
-       
 
     }
 }
