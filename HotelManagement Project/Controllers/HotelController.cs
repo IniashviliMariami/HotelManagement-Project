@@ -95,23 +95,11 @@ namespace HotelManagement_Project.Controllers
             return Ok(hotels);
         }
 
-        [HttpGet("filter")]
-        public async Task<IActionResult> GetFilteredHotels([FromQuery] string? country, [FromQuery] string? city, [FromQuery] int? rating)
-        {
-            var hotels = await _hotelService.GetFilteredHotelsAsync(country, city, rating);
-
-            if (hotels == null || !hotels.Any())
-            {
-                return NotFound("No hotels found with the given filters.");
-            }
-
-            return Ok(hotels);
-        }
-
+       
 
 
         [HttpGet("{hotelId}")]
-       
+
         public async Task<ActionResult<HotelForGettingDto>> GetHotel(int hotelId)
         {
             try
@@ -125,7 +113,7 @@ namespace HotelManagement_Project.Controllers
             }
         }
 
-        
+
         [HttpPut("{hotelId}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateHotel(int hotelId, [FromBody] HotelForUpdateingDto hotelDto)
@@ -152,6 +140,29 @@ namespace HotelManagement_Project.Controllers
 
         }
 
+
+
+        [HttpGet("country/{country}")]
+        public async Task<IActionResult> GetHotelsByCountry(string country)
+        {
+            var hotels = await _hotelService.GetHotelsByCountryAsync(country);
+            return Ok(hotels);
+        }
+
+
+        [HttpGet("city/{city}")]
+        public async Task<IActionResult> GetHotelsByCity(string city)
+        {
+            var hotels = await _hotelService.GetHotelsByCityAsync(city);
+            return Ok(hotels);
+        }
+
+        [HttpGet("rating/{rating}")]
+        public async Task<IActionResult> GetHotelsByRating(int rating)
+        {
+            var hotels = await _hotelService.GetHotelsByRatingAsync(rating);
+            return Ok(hotels);
+        }
         //  ------------
 
         [HttpPost("Manager")]

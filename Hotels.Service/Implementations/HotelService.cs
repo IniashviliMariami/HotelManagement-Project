@@ -99,14 +99,22 @@ namespace Hotels.Service.Implementations
          
             return _mapper.Map<List<HotelForGettingDto>>(hotels);
         }
-        public async Task<List<HotelForGettingDto>> GetFilteredHotelsAsync(string? country, string? city, int? rating)
+       
+        public async Task<List<HotelForGettingDto>> GetHotelsByCountryAsync(string country)
         {
-            var hotels = await _hotelRepository.GetAllAsync(h =>
-                (string.IsNullOrEmpty(country) || h.Country == country) &&
-                (string.IsNullOrEmpty(city) || h.City == city) &&
-                (!rating.HasValue || h.Rating == rating)
-            );
+            var hotels = await _hotelRepository.GetAllAsync(h => h.Country == country);
+            return _mapper.Map<List<HotelForGettingDto>>(hotels);
+        }
 
+        public async Task<List<HotelForGettingDto>> GetHotelsByCityAsync(string city)
+        {
+            var hotels = await _hotelRepository.GetAllAsync(h => h.City == city);
+            return _mapper.Map<List<HotelForGettingDto>>(hotels);
+        }
+
+        public async Task<List<HotelForGettingDto>> GetHotelsByRatingAsync(int rating)
+        {
+            var hotels = await _hotelRepository.GetAllAsync(h => h.Rating == rating);
             return _mapper.Map<List<HotelForGettingDto>>(hotels);
         }
 

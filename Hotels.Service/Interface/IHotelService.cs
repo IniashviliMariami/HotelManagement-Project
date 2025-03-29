@@ -15,8 +15,10 @@ namespace Hotels.Service.Interface
         Task<HotelForGettingDto> GetHotelAsync(int hotelId);
         Task<List<HotelForGettingDto>> GetAllHotelsAsync(string country, string city, int? rating);
         Task SaveHotel();
-        Task<List<HotelForGettingDto>> GetFilteredHotelsAsync(string? country, string? city, int? rating);
-
+       
+        Task<List<HotelForGettingDto>> GetHotelsByCountryAsync(string country);
+        Task<List<HotelForGettingDto>> GetHotelsByCityAsync(string city);
+        Task<List<HotelForGettingDto>> GetHotelsByRatingAsync(int rating);
 
     }
 }
